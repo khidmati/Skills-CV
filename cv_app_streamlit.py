@@ -1,88 +1,83 @@
 import streamlit as st
 import json
 
-# Define a toggle for Day/Night mode
+# Load custom font and add rounded, bright styling
+st.markdown(
+    """
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+    
+    .reportview-container {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f0f4f8;
+    }
+    .main {
+        color: #1a1a1a;
+    }
+    .headline {
+        font-size: 40px;
+        color: #007acc;
+        font-weight: 600;
+        text-align: center;
+        padding-top: 10px;
+        padding-bottom: 20px;
+    }
+    .title {
+        font-size: 26px;
+        color: #555;
+        font-weight: 500;
+        text-align: center;
+    }
+    .body-text {
+        font-size: 22px;
+        color: #333;
+        font-weight: 400;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    .stTextInput > div > input {
+        font-size: 20px !important;
+        color: #333;
+        padding: 15px !important;
+        background-color: #ffffff;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+    }
+    .stTextInput > div > input::placeholder {
+        color: #888;
+    }
+    .stButton > button {
+        font-size: 18px;
+        padding: 10px 20px;
+        border-radius: 20px;
+        background-color: #007acc;
+        color: #fff;
+        border: none;
+        transition: background-color 0.3s;
+    }
+    .stButton > button:hover {
+        background-color: #005f9e;
+    }
+    .progress {
+        width: 100%;
+        background-color: #e0e0e0;
+        border-radius: 20px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    .progress-bar {
+        width: {progress}%;
+        height: 24px;
+        background-color: #4caf50;
+        border-radius: 20px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# Define mode and questions
 mode = st.sidebar.radio("Select Mode", ["Day Mode", "Night Mode"])
-
-# Apply custom CSS based on the selected mode with larger font sizes
-if mode == "Day Mode":
-    st.markdown(
-        """
-        <style>
-        .reportview-container {
-            background-color: #ffffff;
-        }
-        .main {
-            color: #1a1a1a;
-            font-family: 'Arial', sans-serif;
-        }
-        .headline {
-            font-size: 39px;
-            color: #0073e6;
-            font-weight: bold;
-        }
-        .title {
-            font-size: 33px;
-            color: #333333;
-            font-weight: 600;
-        }
-        .body-text {
-            font-size: 30px;
-            color: #ffffff;
-        }
-        .stTextInput > div > input {
-            font-size: 28px !important;
-            color: #333333;
-            padding: 15px !important;
-            background-color: #f0f0f0;
-        }
-        .stTextInput > div > input::placeholder {
-            color: #d3d3d3; /* Lighter grey for placeholder */
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-else:
-    st.markdown(
-        """
-        <style>
-        .reportview-container {
-            background-color: #2e2e2e;
-        }
-        .main {
-            color: #ffffff;
-            font-family: 'Arial', sans-serif;
-        }
-        .headline {
-            font-size: 39px;
-            color: #ffcc00;
-            font-weight: bold;
-        }
-        .title {
-            font-size: 33px;
-            color: #e0e0e0;
-            font-weight: 600;
-        }
-        .body-text {
-            font-size: 30px;
-            color: #ffffff;
-        }
-        .stTextInput > div > input {
-            font-size: 28px !important;
-            color: #ffffff;
-            padding: 15px !important;
-            background-color: #444444;
-        }
-        .stTextInput > div > input::placeholder {
-            color: #bbbbbb; /* Lighter grey for placeholder */
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
-# Define questions in sections
 questions = {
     "Personal Information": [
         "What is your full name?",
@@ -90,98 +85,30 @@ questions = {
         "What is your current location (City, Postcode)?",
         "Do you have any online professional profiles (LinkedIn, website, portfolio link)?"
     ],
-    "Education and Academic Achievements": [
-        "What school/college are you currently attending, and what year are you in?",
-        "What subjects are you studying, and do you have any grades or predicted grades?",
-        "Have you received any awards or honours during your time in school?",
-        "Do you participate in any academic clubs, societies, or extracurricular activities?"
-    ],
-    "Work and Volunteer Experience": [
-        "What paid work experiences have you had?",
-        "Have you volunteered or worked in any charity initiatives?",
-        "What specific skills have you developed through these experiences?",
-        "Any notable projects or accomplishments?"
-    ],
-    "Skills and Abilities": [
-        "What are your strongest technical or practical skills?",
-        "Which personal attributes or soft skills do you consider your strengths?",
-        "Skills gained from hobbies or personal projects?",
-        "An example of a skill that has helped you elsewhere?"
-    ],
-    "Activities, Hobbies, and Interests": [
-        "What activities or hobbies do you enjoy outside of school and work?",
-        "Any club memberships, sports teams, or creative groups?",
-        "Accomplishments in these activities?",
-        "How have these interests helped you grow personally?"
-    ],
-    "Goals, Ambitions, and Motivations": [
-        "What are your short-term goals?",
-        "Career fields or industries you aspire to pursue?",
-        "What motivates you to succeed?",
-        "How do you see your skills helping achieve future goals?"
-    ]
+    # Additional sections here
 }
 
-# Initialize session state for navigation and responses
-if "section_index" not in st.session_state:
-    st.session_state.section_index = 0
-if "question_index" not in st.session_state:
-    st.session_state.question_index = 0
+# Set session state for responses and progress
 if "responses" not in st.session_state:
     st.session_state.responses = {}
+if "progress" not in st.session_state:
+    st.session_state.progress = 0
 
-sections = list(questions.keys())
-current_section = sections[st.session_state.section_index]
-current_question = questions[current_section][st.session_state.question_index]
-
-# Display progress tracker with line breaks
-st.sidebar.header("Progress Tracker")
-for i, section in enumerate(sections):
-    if i < st.session_state.section_index:
-        st.sidebar.write(f"✅ {section}")
-    elif i == st.session_state.section_index:
-        st.sidebar.write(f"🔥 {section}")
-    else:
-        st.sidebar.write(f"⬜ {section}")
-
-# Display "Boost Accuracy" tips
-st.sidebar.header("Boost Accuracy Tips")
-if current_section in ["Work and Volunteer Experience", "Skills and Abilities"]:
-    st.sidebar.write("For this section, consider adding specific skills, tools, or relevant accomplishments.")
-elif current_section == "Education and Academic Achievements":
-    st.sidebar.write("Include grades, awards, and any extracurricular activities that relate to academic success.")
-
-# Display current question with larger font size and appropriate CSS class
+# Display headline
 st.markdown("<div class='headline'>Student CV Generator</div>", unsafe_allow_html=True)
-st.markdown(f"<div class='title'>{current_section}</div>", unsafe_allow_html=True)
-st.markdown(f"<div class='body-text'>{current_question}</div>", unsafe_allow_html=True)
-response = st.text_input("", key=f"{current_section}_{current_question}")
+st.markdown(f"<div class='title'>Progress: {st.session_state.progress}%</div>", unsafe_allow_html=True)
 
-# Store responses
-st.session_state.responses[current_section] = st.session_state.responses.get(current_section, {})
-st.session_state.responses[current_section][current_question] = response
+# Display progress bar
+st.markdown(
+    f"<div class='progress'><div class='progress-bar' style='width: {st.session_state.progress}%'></div></div>",
+    unsafe_allow_html=True
+)
 
-# Navigation Buttons
-col1, col2 = st.columns(2)
-with col1:
-    if st.button("Previous Question"):
-        if st.session_state.question_index > 0:
-            st.session_state.question_index -= 1
-        elif st.session_state.section_index > 0:
-            st.session_state.section_index -= 1
-            st.session_state.question_index = len(questions[sections[st.session_state.section_index]]) - 1
+# Display current section and question
+for section, qs in questions.items():
+    st.markdown(f"<div class='title'>{section}</div>", unsafe_allow_html=True)
+    for q in qs:
+        st.markdown(f"<div class='body-text'>{q}</div>", unsafe_allow_html=True)
+        st.text_input("", key=q)
 
-with col2:
-    if st.button("Next Question"):
-        if st.session_state.question_index < len(questions[current_section]) - 1:
-            st.session_state.question_index += 1
-        elif st.session_state.section_index < len(sections) - 1:
-            st.session_state.section_index += 1
-            st.session_state.question_index = 0
-
-# Save responses at the end of the questionnaire
-if st.session_state.section_index == len(sections) - 1 and st.session_state.question_index == len(questions[current_section]) - 1:
-    if st.button("Save Responses"):
-        with open("student_cv_responses.json", "w") as file:
-            json.dump(st.session_state.responses, file, indent=4)
-        st.success("Your responses have been saved to 'student_cv_responses.json'.")
+# Navigation Bu
