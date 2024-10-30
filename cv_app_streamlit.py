@@ -145,4 +145,16 @@ st.session_state.responses[current_section][current_question] = response
 col1, col2 = st.columns(2)
 with col1:
     if st.button("Previous"):
-        if st.session_state
+        if st.session_state.current_question_index > 0:
+            st.session_state.current_question_index -= 1
+        elif st.session_state.current_section_index > 0:
+            st.session_state.current_section_index -= 1
+            st.session_state.current_question_index = len(questions[sections[st.session_state.current_section_index]]) - 1
+
+with col2:
+    if st.button("Next"):
+        if st.session_state.current_question_index < len(questions[current_section]) - 1:
+            st.session_state.current_question_index += 1
+        elif st.session_state.current_section_index < len(sections) - 1:
+            st.session_state.current_section_index += 1
+            st.session_state.current_question_index = 0
