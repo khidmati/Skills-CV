@@ -1,6 +1,25 @@
 import streamlit as st
 import json
 
+# Apply light mode and larger text size
+st.markdown(
+    """
+    <style>
+    .reportview-container {
+        background-color: #f8f9fa;
+    }
+    .main {
+        color: #333333;
+        font-size:18px;
+    }
+    input {
+        font-size: 18px !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # Define questions in sections
 questions = {
     "Personal Information": [
@@ -41,28 +60,60 @@ questions = {
     ]
 }
 
-# Dictionary to store responses
-responses = {}
+# Initialize session state for navigation and responses
+if "section_index" not in st.session_state:
+    st.session_state.section_index = 0
+if "question_index" not in st.session_state:
+    st.session_state.question_index = 0
+if "responses" not in st.session_state:
+    st.session_state.responses = {}
 
-# Page navigation
+sections = list(questions.keys())
+current_section = sections[st.session_state.section_index]
+current_question = questions[current_section][st.session_state.question_index]
+
+# Display progress tracker
+st.sidebar.header("Progress Tracker")
+progress_status = []
+for i, section in enumerate(sections):
+    if i < st.session_state.section_index:
+        progress_status.append(f"✅ {section}")
+    elif i == st.session_state.section_index:
+        progress_status.append(f"🔥 {section}")
+    else:
+        progress_status.append(f"⬜ {section}")
+st.sidebar.write("\n".join(progress_status))
+
+# Display current question
 st.title("Student CV Generator")
-section = st.sidebar.selectbox("Select a Section to Fill", list(questions.keys()))
+st.subheader(current_section)
+response = st.text_input(current_question, key=f"{current_section}_{current_question}")
 
-# Display questions for the selected section
-st.header(section)
-for q in questions[section]:
-    response = st.text_input(q, key=f"{section}_{q}")
-    responses[section] = responses.get(section, {})
-    responses[section][q] = response
+# Store responses
+st.session_state.responses[current_section] = st.session_state.responses.get(current_section, {})
+st.session_state.responses[current_section][current_question] = response
 
-# Button to move to the next section
-st.sidebar.write("Navigate through sections using this menu.")
-if st.sidebar.button("Save Responses"):
-    with open("student_cv_responses.json", "w") as file:
-        json.dump(responses, file, indent=4)
-    st.success("Your responses have been saved to 'student_cv_responses.json'.")
+# Navigation Buttons
+col1, col2 = st.columns(2)
+with col1:
+    if st.button("Previous Question"):
+        if st.session_state.question_index > 0:
+            st.session_state.question_index -= 1
+        elif st.session_state.section_index > 0:
+            st.session_state.section_index -= 1
+            st.session_state.question_index = len(questions[sections[st.session_state.section_index]]) - 1
 
-# "Boost Accuracy" suggestion area
-st.sidebar.header("Boost Accuracy Tips")
-if section in ["Work and Volunteer Experience", "Skills and Abilities"]:
-    st.sidebar.write("Consider adding specific skills, roles, or tools relevant to your experience.")
+with col2:
+    if st.button("Next Question"):
+        if st.session_state.question_index < len(questions[current_section]) - 1:
+            st.session_state.question_index += 1
+        elif st.session_state.section_index < len(sections) - 1:
+            st.session_state.section_index += 1
+            st.session_state.question_index = 0
+
+# Save responses at the end of the questionnaire
+if st.session_state.section_index == len(sections) - 1 and st.session_state.question_index == len(questions[current_section]) - 1:
+    if st.button("Save Responses"):
+        with open("student_cv_responses.json", "w") as file:
+            json.dump(st.session_state.responses, file, indent=4)
+        st.success("Your responses have been saved to 'student_cv_responses.json'.")
