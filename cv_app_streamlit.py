@@ -87,8 +87,9 @@ def main():
             save_answer(current_section['section'], current_question['key'], answer)
             # Move to the next question
             st.session_state.question_number += 1
-            # Clear the text area
-            st.experimental_rerun()
+            # Clear the text area by rerunning the app without calling st.experimental_rerun()
+            st.experimental_set_query_params(run=str(st.session_state.question_number))
+            st._rerun()
 
     else:
         # All questions have been answered
@@ -161,6 +162,18 @@ def get_questions():
                 {'key': 'Career Aspirations', 'question': 'Are there any specific career fields, industries, or roles that you aspire to pursue?'},
                 {'key': 'Motivations', 'question': 'What motivates you to succeed, both academically and personally?'},
                 {'key': 'Future Skills', 'question': 'How do you see your current skills and experiences helping you achieve your future goals?'}
+            ]
+        },
+        {
+            'section': 'Experiences and Personal Reflections',
+            'header': '7. Experiences and Personal Reflections',
+            'questions': [
+                {'key': 'Helping Others', 'question': 'Who have you helped in the past week, month, or year? What did you do for them?'},
+                {'key': 'Problem Solving', 'question': 'Describe a time when you solved a problem for someone else. What steps did you take?'},
+                {'key': 'Overcoming Challenges', 'question': 'Think about a recent challenge you faced. How did you overcome it?'},
+                {'key': 'Organizational Roles', 'question': 'Have you organized or participated in any events or activities? What was your role?'},
+                {'key': 'Daily Responsibilities', 'question': 'What are some tasks you regularly handle at home or school? How do you manage them?'},
+                {'key': 'Learning Experiences', 'question': 'Have you learned something new recently? How did you approach the learning process?'}
             ]
         }
     ]
