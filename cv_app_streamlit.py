@@ -1,144 +1,201 @@
 import streamlit as st
 import json
 
-# Load Material Design font and apply Google-like design with shadows and elevation
-st.markdown(
-    """
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+# Add a toggle for Day/Night Mode
+mode = st.sidebar.radio("Select Mode", ["Light Mode", "Dark Mode"])
 
-    .reportview-container {
-        font-family: 'Roboto', sans-serif;
-        background-color: #1e1e1e;  /* Slightly lighter background for better contrast */
-    }
+# Apply custom CSS for true light and dark modes, Google-style typography, and vibrant colours
+if mode == "Light Mode":
+    st.markdown(
+        """
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+        
+        .reportview-container {
+            font-family: 'Roboto', sans-serif;
+            background-color: #ffffff; /* True white background */
+            color: #1a1a1a;
+        }
+        .sidebar .sidebar-content {
+            background-color: #f0f0f0; /* Light grey for sidebar */
+        }
+        .headline {
+            font-size: 44px;
+            color: #4285f4;  /* Google blue */
+            font-weight: 700;
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .title {
+            font-size: 30px;
+            color: #333333;
+            font-weight: 500;
+            text-align: left;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+        .body-text {
+            font-size: 22px;
+            color: #666666;
+            font-weight: 400;
+            text-align: left;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+        .stTextInput > div > input {
+            font-size: 20px !important;
+            color: #333333;
+            padding: 15px !important;
+            background-color: #f7f7f7;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .stTextInput > div > input::placeholder {
+            color: #999999;
+        }
+        .stButton > button {
+            font-size: 20px;
+            padding: 10px 20px;
+            border-radius: 24px;
+            background-color: #4285f4; /* Google blue */
+            color: #ffffff;
+            border: none;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+        .stButton > button:hover {
+            background-color: #357ae8;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 12px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #34a853;  /* Google green */
+            transition: width 0.3s ease;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+else:
+    st.markdown(
+        """
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 
-    .headline {
-        font-size: 36px;
-        color: #4285f4;  /* Google blue */
-        font-weight: 700;
-        text-align: center;
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
+        .reportview-container {
+            font-family: 'Roboto', sans-serif;
+            background-color: #1e1e1e;
+            color: #ffffff;
+        }
+        .headline {
+            font-size: 44px;
+            color: #ffcc00;
+            font-weight: 700;
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .title {
+            font-size: 30px;
+            color: #e0e0e0;
+            font-weight: 500;
+            text-align: left;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+        .body-text {
+            font-size: 22px;
+            color: #bbbbbb;
+            font-weight: 400;
+            text-align: left;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+        .stTextInput > div > input {
+            font-size: 20px !important;
+            color: #ffffff;
+            padding: 15px !important;
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .stButton > button {
+            font-size: 20px;
+            padding: 10px 20px;
+            border-radius: 24px;
+            background-color: #4285f4;
+            color: #ffffff;
+            border: none;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+        .progress-bar-container {
+            width: 100%;
+            background-color: #333;
+            border-radius: 10px;
+            height: 12px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #34a853;
+            transition: width 0.3s ease;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
-    .title {
-        font-size: 24px;
-        color: #e0e0e0;
-        font-weight: 500;
-        text-align: left;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        padding-left: 20px;
-    }
+# Change header title to "FREE CV"
+st.markdown("<div class='headline'>FREE CV</div>", unsafe_allow_html=True)
 
-    .body-text {
-        font-size: 20px;
-        color: #e0e0e0;
-        font-weight: 400;
-        text-align: left;
-        margin-bottom: 10px;
-        padding-left: 20px;
-    }
-
-    .stTextInput > div > input {
-        font-size: 18px !important;
-        color: #ffffff;
-        padding: 15px !important;
-        background-color: #2a2a2a;
-        border-radius: 8px;
-        border: none;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        transition: box-shadow 0.3s ease;
-    }
-
-    .stTextInput > div > input:focus {
-        box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);  /* Google blue shadow on focus */
-        outline: none;
-    }
-
-    .stTextInput > div > input::placeholder {
-        color: #b3b3b3; /* Subtle grey for placeholder */
-    }
-
-    .stButton > button {
-        font-size: 18px;
-        padding: 10px 20px;
-        border-radius: 24px;
-        background-color: #4285f4; /* Google blue */
-        color: #fff;
-        border: none;
-        transition: background-color 0.3s, box-shadow 0.3s ease;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-
-    .stButton > button:hover {
-        background-color: #357ae8; /* Darker Google blue */
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    }
-
-    .progress-bar-container {
-        width: 100%;
-        background-color: #333;
-        border-radius: 10px;
-        overflow: hidden;
-        height: 10px;
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
-
-    .progress-bar {
-        height: 100%;
-        width: {progress}%;
-        background-color: #34a853;  /* Google green */
-        transition: width 0.3s ease;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-# Define mode and questions
-questions = {
-    "Personal Information": [
-        "What is your full name?",
-        "What is your primary contact information (phone number and email address)?",
-        "What is your current location (City, Postcode)?",
-        "Do you have any online professional profiles (LinkedIn, website, portfolio link)?"
-    ],
-    # Additional sections here
-}
-
-# Set session state for responses and progress
-if "responses" not in st.session_state:
-    st.session_state.responses = {}
+# Example progress tracking (simulating percentage completion)
 if "progress" not in st.session_state:
     st.session_state.progress = 0
-
-# Display headline
-st.markdown("<div class='headline'>Student CV Generator</div>", unsafe_allow_html=True)
-
-# Display progress bar with animation
 progress_percentage = st.session_state.progress
+
+# Display progress bar
 st.markdown(
     f"<div class='progress-bar-container'><div class='progress-bar' style='width: {progress_percentage}%;'></div></div>",
     unsafe_allow_html=True
 )
 st.write(f"**Progress:** {progress_percentage}%")
 
-# Display current section and question
+# Define some sample sections and questions
+questions = {
+    "Personal Information": [
+        "What is your full name?",
+        "What is your primary contact information (phone number and email address)?"
+    ]
+}
+
+# Display sections and input fields
 for section, qs in questions.items():
     st.markdown(f"<div class='title'>{section}</div>", unsafe_allow_html=True)
     for q in qs:
         st.markdown(f"<div class='body-text'>{q}</div>", unsafe_allow_html=True)
         st.text_input("", key=q)
 
-# Navigation Buttons
+# Example navigation buttons with updated styles
 col1, col2 = st.columns(2)
 with col1:
     if st.button("Previous"):
-        # Logic to go to previous question
-        st.session_state.progress = max(0, st.session_state.progress - 20)  # Adjust progress backward
+        st.session_state.progress = max(0, st.session_state.progress - 20)
 with col2:
     if st.button("Next"):
-        # Logic to go to next question and update progress
-        st.session_state.progress = min(100, st.session_state.progress + 20)  # Adjust progress forward
+        st.session_state.progress = min(100, st.session_state.progress + 20)
