@@ -1,75 +1,96 @@
 import streamlit as st
 import json
 
-# Load custom font and add rounded, bright styling
+# Load Material Design font and apply Google-like design with shadows and elevation
 st.markdown(
     """
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
-    
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
     .reportview-container {
-        font-family: 'Poppins', sans-serif;
-        background-color: #f0f4f8;
+        font-family: 'Roboto', sans-serif;
+        background-color: #1e1e1e;  /* Slightly lighter background for better contrast */
     }
-    .main {
-        color: #1a1a1a;
-    }
+
     .headline {
-        font-size: 40px;
-        color: #007acc;
-        font-weight: 600;
+        font-size: 36px;
+        color: #4285f4;  /* Google blue */
+        font-weight: 700;
         text-align: center;
-        padding-top: 10px;
-        padding-bottom: 20px;
-    }
-    .title {
-        font-size: 26px;
-        color: #555;
-        font-weight: 500;
-        text-align: center;
-    }
-    .body-text {
-        font-size: 22px;
-        color: #333;
-        font-weight: 400;
-        text-align: center;
-        margin-bottom: 10px;
-    }
-    .stTextInput > div > input {
-        font-size: 20px !important;
-        color: #333;
-        padding: 15px !important;
-        background-color: #ffffff;
-        border-radius: 10px;
-        border: 1px solid #ccc;
-    }
-    .stTextInput > div > input::placeholder {
-        color: #888;
-    }
-    .stButton > button {
-        font-size: 18px;
-        padding: 10px 20px;
-        border-radius: 20px;
-        background-color: #007acc;
-        color: #fff;
-        border: none;
-        transition: background-color 0.3s;
-    }
-    .stButton > button:hover {
-        background-color: #005f9e;
-    }
-    .progress {
-        width: 100%;
-        background-color: #e0e0e0;
-        border-radius: 20px;
         margin-top: 20px;
         margin-bottom: 20px;
     }
+
+    .title {
+        font-size: 24px;
+        color: #e0e0e0;
+        font-weight: 500;
+        text-align: left;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        padding-left: 20px;
+    }
+
+    .body-text {
+        font-size: 20px;
+        color: #e0e0e0;
+        font-weight: 400;
+        text-align: left;
+        margin-bottom: 10px;
+        padding-left: 20px;
+    }
+
+    .stTextInput > div > input {
+        font-size: 18px !important;
+        color: #ffffff;
+        padding: 15px !important;
+        background-color: #2a2a2a;
+        border-radius: 8px;
+        border: none;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: box-shadow 0.3s ease;
+    }
+
+    .stTextInput > div > input:focus {
+        box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);  /* Google blue shadow on focus */
+        outline: none;
+    }
+
+    .stTextInput > div > input::placeholder {
+        color: #b3b3b3; /* Subtle grey for placeholder */
+    }
+
+    .stButton > button {
+        font-size: 18px;
+        padding: 10px 20px;
+        border-radius: 24px;
+        background-color: #4285f4; /* Google blue */
+        color: #fff;
+        border: none;
+        transition: background-color 0.3s, box-shadow 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .stButton > button:hover {
+        background-color: #357ae8; /* Darker Google blue */
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+
+    .progress-bar-container {
+        width: 100%;
+        background-color: #333;
+        border-radius: 10px;
+        overflow: hidden;
+        height: 10px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
     .progress-bar {
+        height: 100%;
         width: {progress}%;
-        height: 24px;
-        background-color: #4caf50;
-        border-radius: 20px;
+        background-color: #34a853;  /* Google green */
+        transition: width 0.3s ease;
     }
     </style>
     """,
@@ -77,7 +98,6 @@ st.markdown(
 )
 
 # Define mode and questions
-mode = st.sidebar.radio("Select Mode", ["Day Mode", "Night Mode"])
 questions = {
     "Personal Information": [
         "What is your full name?",
@@ -96,13 +116,14 @@ if "progress" not in st.session_state:
 
 # Display headline
 st.markdown("<div class='headline'>Student CV Generator</div>", unsafe_allow_html=True)
-st.markdown(f"<div class='title'>Progress: {st.session_state.progress}%</div>", unsafe_allow_html=True)
 
-# Display progress bar
+# Display progress bar with animation
+progress_percentage = st.session_state.progress
 st.markdown(
-    f"<div class='progress'><div class='progress-bar' style='width: {st.session_state.progress}%'></div></div>",
+    f"<div class='progress-bar-container'><div class='progress-bar' style='width: {progress_percentage}%;'></div></div>",
     unsafe_allow_html=True
 )
+st.write(f"**Progress:** {progress_percentage}%")
 
 # Display current section and question
 for section, qs in questions.items():
@@ -116,8 +137,8 @@ col1, col2 = st.columns(2)
 with col1:
     if st.button("Previous"):
         # Logic to go to previous question
-        pass
+        st.session_state.progress = max(0, st.session_state.progress - 20)  # Adjust progress backward
 with col2:
     if st.button("Next"):
         # Logic to go to next question and update progress
-        st.session_state.progress += 20  # Update progress example
+        st.session_state.progress = min(100, st.session_state.progress + 20)  # Adjust progress forward
