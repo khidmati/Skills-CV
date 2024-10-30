@@ -1,160 +1,103 @@
 import streamlit as st
 import json
 
-# Select Light Mode only with a clean, bright background
-st.markdown(
-    """
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+st.title("Student CV Questionnaire")
 
-    /* General font settings */
-    .reportview-container {
-        font-family: 'Roboto', sans-serif;
-        background-color: #ffffff; /* White background */
-        color: #333333; /* Default dark grey for text */
-    }
-    .sidebar .sidebar-content {
-        background-color: #f7f7f7; /* Light grey sidebar background */
-    }
+def main():
+    st.header("Please fill out the following form to help us create your CV.")
 
-    /* Headline styling */
-    .headline {
-        font-size: 36px;
-        color: #333333;  /* Dark grey */
-        font-weight: 700;
-        text-align: center;
-        margin-top: 20px;
-    }
+    # Personal Information
+    st.subheader("1. Personal Information and Contact Details")
+    name = st.text_input("1. What is your full name?")
+    contact_info = st.text_input("2. What is your primary contact information (phone number and email address)?")
+    location = st.text_input("3. What is your current location (City, Postcode)?")
+    online_profiles = st.text_input("4. Do you have any online professional profiles (LinkedIn, website, portfolio link)?")
 
-    /* Section title styling */
-    .title {
-        font-size: 24px;
-        color: #555555;  /* Medium grey */
-        font-weight: 500;
-        padding-left: 20px;
-        margin-top: 10px;
-        margin-bottom: 5px;
-    }
+    # Education and Academic Achievements
+    st.subheader("2. Education and Academic Achievements")
+    school = st.text_input("1. What school/college are you currently attending, and what year are you in?")
+    subjects = st.text_input("2. What subjects are you studying, and do you have any grades or predicted grades?")
+    awards = st.text_area("3. Have you received any awards or honours during your time in school (e.g., top student, subject awards)?")
+    extracurriculars = st.text_area("4. Do you participate in any academic clubs, societies, or extracurricular academic activities?")
 
-    /* Body text styling */
-    .body-text {
-        font-size: 20px;
-        color: #666666;  /* Lighter grey */
-        padding-left: 20px;
-        margin-bottom: 15px;
-    }
+    # Work and Volunteer Experience
+    st.subheader("3. Work and Volunteer Experience")
+    work_experience = st.text_area("1. What paid work experiences have you had? Please provide job title, employer, and main responsibilities.")
+    volunteer_experience = st.text_area("2. Have you volunteered or worked in any charity initiatives? Describe your role and what you contributed.")
+    skills_learned = st.text_area("3. What specific skills or abilities have you developed through your work experiences?")
+    proud_projects = st.text_area("4. Do you have any projects or accomplishments from these roles that you’re particularly proud of?")
 
-    /* Input field styling */
-    .stTextInput > div > input {
-        font-size: 18px;
-        color: #333333;  /* Darker grey for input text */
-        background-color: #ffffff;  /* White background for input fields */
-        border-radius: 5px;
-        border: 1px solid #ddd;  /* Light grey border */
-        padding: 10px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);  /* Subtle shadow */
-    }
-    .stTextInput > div > input::placeholder {
-        color: #999999; /* Subtle grey for placeholder text */
-    }
+    # Skills and Abilities
+    st.subheader("4. Skills and Abilities")
+    technical_skills = st.text_area("1. What are your strongest technical or practical skills (e.g., IT, communication, teamwork)?")
+    soft_skills = st.text_area("2. Which personal attributes or soft skills (like leadership, organisation, creativity) would you say are your strengths?")
+    other_skills = st.text_area("3. Are there any skills you have gained through hobbies, online learning, or personal projects?")
+    skill_examples = st.text_area("4. Can you give an example of a skill you developed that has helped you perform better in other areas of life?")
 
-    /* Button styling */
-    .stButton > button {
-        font-size: 18px;
-        padding: 10px 20px;
-        border-radius: 20px;
-        background-color: #4285f4;  /* Google blue */
-        color: #ffffff;
-        border: none;
-        transition: background-color 0.3s, box-shadow 0.3s;
-    }
-    .stButton > button:hover {
-        background-color: #357ae8;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    }
+    # Activities, Hobbies, and Interests
+    st.subheader("5. Activities, Hobbies, and Interests")
+    hobbies = st.text_area("1. What activities or hobbies do you enjoy outside of school and work?")
+    groups = st.text_area("2. Have you been part of any clubs, sports teams, or creative groups?")
+    hobby_achievements = st.text_area("3. Do you have any accomplishments or awards in these activities (e.g., sports medals, competition wins)?")
+    hobby_skills = st.text_area("4. How have these interests helped you develop new skills or grow personally?")
 
-    /* Progress bar styling */
-    .progress-bar-container {
-        width: 100%;
-        background-color: #e0e0e0;
-        border-radius: 10px;
-        overflow: hidden;
-        height: 10px;
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
-    .progress-bar {
-        height: 100%;
-        background-color: #34a853;  /* Google green for progress */
-        transition: width 0.3s ease;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+    # Goals, Ambitions, and Motivations
+    st.subheader("6. Goals, Ambitions, and Motivations")
+    short_term_goals = st.text_area("1. What are your short-term goals for the next few years (e.g., work experience, higher education)?")
+    career_aspirations = st.text_area("2. Are there any specific career fields, industries, or roles that you aspire to pursue?")
+    motivations = st.text_area("3. What motivates you to succeed, both academically and personally?")
+    future_skills = st.text_area("4. How do you see your current skills and experiences helping you achieve your future goals?")
 
-# Title and headline
-st.markdown("<div class='headline'>FREE CV</div>", unsafe_allow_html=True)
+    # Submit Button
+    if st.button("Submit"):
+        # Collect all responses into a dictionary
+        responses = {
+            "Personal Information": {
+                "Full Name": name,
+                "Contact Information": contact_info,
+                "Location": location,
+                "Online Profiles": online_profiles
+            },
+            "Education and Academic Achievements": {
+                "School": school,
+                "Subjects": subjects,
+                "Awards": awards,
+                "Extracurricular Activities": extracurriculars
+            },
+            "Work and Volunteer Experience": {
+                "Work Experience": work_experience,
+                "Volunteer Experience": volunteer_experience,
+                "Skills Learned": skills_learned,
+                "Proud Projects": proud_projects
+            },
+            "Skills and Abilities": {
+                "Technical Skills": technical_skills,
+                "Soft Skills": soft_skills,
+                "Other Skills": other_skills,
+                "Skill Examples": skill_examples
+            },
+            "Activities, Hobbies, and Interests": {
+                "Hobbies": hobbies,
+                "Groups": groups,
+                "Hobby Achievements": hobby_achievements,
+                "Hobby Skills": hobby_skills
+            },
+            "Goals, Ambitions, and Motivations": {
+                "Short-term Goals": short_term_goals,
+                "Career Aspirations": career_aspirations,
+                "Motivations": motivations,
+                "Future Skills": future_skills
+            }
+        }
 
-# Questions and Progress Setup
-questions = {
-    "Personal Information": [
-        "What is your full name?",
-        "What is your primary contact information (phone number and email address)?",
-        "What is your current location (City, Postcode)?"
-    ],
-    # You can add more sections and questions here
-}
+        # Display a thank you message
+        st.success("Thank you for submitting the form!")
 
-# Initialize session state for progress tracking
-if "responses" not in st.session_state:
-    st.session_state.responses = {section: {} for section in questions}
-if "current_section_index" not in st.session_state:
-    st.session_state.current_section_index = 0
-if "current_question_index" not in st.session_state:
-    st.session_state.current_question_index = 0
+        # Optionally, save the responses to a JSON file
+        with open('responses.json', 'w') as f:
+            json.dump(responses, f, indent=4)
 
-# Calculate progress
-total_questions = sum(len(qs) for qs in questions.values())
-answered_questions = sum(
-    1 for section in st.session_state.responses for answer in st.session_state.responses[section].values() if answer
-)
-progress_percentage = int((answered_questions / total_questions) * 100)
+        st.write("Your responses have been saved.")
 
-# Display progress bar
-st.markdown(
-    f"<div class='progress-bar-container'><div class='progress-bar' style='width: {progress_percentage}%;'></div></div>",
-    unsafe_allow_html=True
-)
-st.write(f"**Progress:** {progress_percentage}%")
-
-# Display current question
-sections = list(questions.keys())
-current_section = sections[st.session_state.current_section_index]
-current_question = questions[current_section][st.session_state.current_question_index]
-
-# Display current section and question
-st.markdown(f"<div class='title'>{current_section}</div>", unsafe_allow_html=True)
-st.markdown(f"<div class='body-text'>{current_question}</div>", unsafe_allow_html=True)
-response = st.text_input("", key=f"{current_section}_{current_question}")
-
-# Store the response
-st.session_state.responses[current_section][current_question] = response
-
-# Navigation logic
-col1, col2 = st.columns(2)
-with col1:
-    if st.button("Previous"):
-        if st.session_state.current_question_index > 0:
-            st.session_state.current_question_index -= 1
-        elif st.session_state.current_section_index > 0:
-            st.session_state.current_section_index -= 1
-            st.session_state.current_question_index = len(questions[sections[st.session_state.current_section_index]]) - 1
-
-with col2:
-    if st.button("Next"):
-        if st.session_state.current_question_index < len(questions[current_section]) - 1:
-            st.session_state.current_question_index += 1
-        elif st.session_state.current_section_index < len(sections) - 1:
-            st.session_state.current_section_index += 1
-            st.session_state.current_question_index = 0
+if __name__ == "__main__":
+    main()
