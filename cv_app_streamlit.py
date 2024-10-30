@@ -1,7 +1,7 @@
 import streamlit as st
 import json
 
-# Define the questions in a structured format
+# Define questions in sections
 questions = {
     "Personal Information": [
         "What is your full name?",
@@ -16,48 +16,53 @@ questions = {
         "Do you participate in any academic clubs, societies, or extracurricular activities?"
     ],
     "Work and Volunteer Experience": [
-        "What paid work experiences have you had? Please provide job title, employer, and main responsibilities.",
-        "Have you volunteered or worked in any charity initiatives? Describe your role and what you contributed.",
-        "What specific skills or abilities have you developed through your work experiences?",
-        "Do you have any projects or accomplishments from these roles that you’re particularly proud of?"
+        "What paid work experiences have you had?",
+        "Have you volunteered or worked in any charity initiatives?",
+        "What specific skills have you developed through these experiences?",
+        "Any notable projects or accomplishments?"
     ],
     "Skills and Abilities": [
         "What are your strongest technical or practical skills?",
         "Which personal attributes or soft skills do you consider your strengths?",
-        "Are there any skills you have gained through hobbies, online learning, or personal projects?",
-        "Can you give an example of a skill you developed that has helped you perform better in other areas of life?"
+        "Skills gained from hobbies or personal projects?",
+        "An example of a skill that has helped you elsewhere?"
     ],
     "Activities, Hobbies, and Interests": [
         "What activities or hobbies do you enjoy outside of school and work?",
-        "Have you been part of any clubs, sports teams, or creative groups?",
-        "Do you have any accomplishments or awards in these activities?",
+        "Any club memberships, sports teams, or creative groups?",
+        "Accomplishments in these activities?",
         "How have these interests helped you grow personally?"
     ],
     "Goals, Ambitions, and Motivations": [
-        "What are your short-term goals for the next few years?",
-        "Are there any specific career fields, industries, or roles you aspire to pursue?",
+        "What are your short-term goals?",
+        "Career fields or industries you aspire to pursue?",
         "What motivates you to succeed?",
-        "How do you see your current skills and experiences helping you achieve your future goals?"
+        "How do you see your skills helping achieve future goals?"
     ]
 }
 
 # Dictionary to store responses
 responses = {}
 
-# Streamlit UI for each category and question
+# Page navigation
 st.title("Student CV Generator")
+section = st.sidebar.selectbox("Select a Section to Fill", list(questions.keys()))
 
-# Loop through each category and question
-for category, qs in questions.items():
-    st.header(category)
-    responses[category] = {}
-    
-    for q in qs:
-        response = st.text_input(q, key=f"{category}_{q}")
-        responses[category][q] = response
+# Display questions for the selected section
+st.header(section)
+for q in questions[section]:
+    response = st.text_input(q, key=f"{section}_{q}")
+    responses[section] = responses.get(section, {})
+    responses[section][q] = response
 
-# Button to save responses to a JSON file
-if st.button("Save Responses"):
+# Button to move to the next section
+st.sidebar.write("Navigate through sections using this menu.")
+if st.sidebar.button("Save Responses"):
     with open("student_cv_responses.json", "w") as file:
         json.dump(responses, file, indent=4)
     st.success("Your responses have been saved to 'student_cv_responses.json'.")
+
+# "Boost Accuracy" suggestion area
+st.sidebar.header("Boost Accuracy Tips")
+if section in ["Work and Volunteer Experience", "Skills and Abilities"]:
+    st.sidebar.write("Consider adding specific skills, roles, or tools relevant to your experience.")
