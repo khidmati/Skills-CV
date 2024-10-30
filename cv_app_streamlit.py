@@ -4,7 +4,7 @@ import json
 # Define a toggle for Day/Night mode
 mode = st.sidebar.radio("Select Mode", ["Day Mode", "Night Mode"])
 
-# Apply custom CSS based on the selected mode
+# Apply custom CSS based on the selected mode with larger font sizes
 if mode == "Day Mode":
     st.markdown(
         """
@@ -17,22 +17,27 @@ if mode == "Day Mode":
             font-family: 'Arial', sans-serif;
         }
         .headline {
-            font-size: 26px;
+            font-size: 39px;
             color: #0073e6;
             font-weight: bold;
         }
         .title {
-            font-size: 22px;
+            font-size: 33px;
             color: #333333;
             font-weight: 600;
         }
         .body-text {
-            font-size: 20px;
-            color: #333333;
+            font-size: 30px;
+            color: #ffffff;
         }
-        input {
-            font-size: 18px !important;
-            padding: 10px !important;
+        .stTextInput > div > input {
+            font-size: 28px !important;
+            color: #333333;
+            padding: 15px !important;
+            background-color: #f0f0f0;
+        }
+        .stTextInput > div > input::placeholder {
+            color: #d3d3d3; /* Lighter grey for placeholder */
         }
         </style>
         """,
@@ -50,22 +55,27 @@ else:
             font-family: 'Arial', sans-serif;
         }
         .headline {
-            font-size: 26px;
+            font-size: 39px;
             color: #ffcc00;
             font-weight: bold;
         }
         .title {
-            font-size: 22px;
+            font-size: 33px;
             color: #e0e0e0;
             font-weight: 600;
         }
         .body-text {
-            font-size: 20px;
-            color: #e0e0e0;
+            font-size: 30px;
+            color: #ffffff;
         }
-        input {
-            font-size: 18px !important;
-            padding: 10px !important;
+        .stTextInput > div > input {
+            font-size: 28px !important;
+            color: #ffffff;
+            padding: 15px !important;
+            background-color: #444444;
+        }
+        .stTextInput > div > input::placeholder {
+            color: #bbbbbb; /* Lighter grey for placeholder */
         }
         </style>
         """,
