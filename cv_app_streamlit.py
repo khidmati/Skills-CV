@@ -1,7 +1,7 @@
 import streamlit as st
 import json
 
-# Apply light mode and larger text size
+# Apply light mode, larger font size, and increased padding
 st.markdown(
     """
     <style>
@@ -10,10 +10,11 @@ st.markdown(
     }
     .main {
         color: #333333;
-        font-size:18px;
+        font-size:22px;
     }
-    input {
-        font-size: 18px !important;
+    .stTextInput > div > input {
+        font-size: 20px !important;
+        padding: 10px !important;
     }
     </style>
     """,
@@ -72,22 +73,28 @@ sections = list(questions.keys())
 current_section = sections[st.session_state.section_index]
 current_question = questions[current_section][st.session_state.question_index]
 
-# Display progress tracker
+# Display progress tracker with line breaks
 st.sidebar.header("Progress Tracker")
-progress_status = []
 for i, section in enumerate(sections):
     if i < st.session_state.section_index:
-        progress_status.append(f"✅ {section}")
+        st.sidebar.write(f"✅ {section}")
     elif i == st.session_state.section_index:
-        progress_status.append(f"🔥 {section}")
+        st.sidebar.write(f"🔥 {section}")
     else:
-        progress_status.append(f"⬜ {section}")
-st.sidebar.write("\n".join(progress_status))
+        st.sidebar.write(f"⬜ {section}")
 
-# Display current question
+# Display "Boost Accuracy" tips
+st.sidebar.header("Boost Accuracy Tips")
+if current_section in ["Work and Volunteer Experience", "Skills and Abilities"]:
+    st.sidebar.write("For this section, consider adding specific skills, tools, or relevant accomplishments.")
+elif current_section == "Education and Academic Achievements":
+    st.sidebar.write("Include grades, awards, and any extracurricular activities that relate to academic success.")
+
+# Display current question with larger font size
 st.title("Student CV Generator")
 st.subheader(current_section)
-response = st.text_input(current_question, key=f"{current_section}_{current_question}")
+st.markdown(f"<div style='font-size: 22px;'>{current_question}</div>", unsafe_allow_html=True)
+response = st.text_input("", key=f"{current_section}_{current_question}")
 
 # Store responses
 st.session_state.responses[current_section] = st.session_state.responses.get(current_section, {})
