@@ -1,25 +1,76 @@
 import streamlit as st
 import json
 
-# Apply light mode, larger font size, and increased padding
-st.markdown(
-    """
-    <style>
-    .reportview-container {
-        background-color: #f8f9fa;
-    }
-    .main {
-        color: #333333;
-        font-size:22px;
-    }
-    .stTextInput > div > input {
-        font-size: 20px !important;
-        padding: 10px !important;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+# Define a toggle for Day/Night mode
+mode = st.sidebar.radio("Select Mode", ["Day Mode", "Night Mode"])
+
+# Apply custom CSS based on the selected mode
+if mode == "Day Mode":
+    st.markdown(
+        """
+        <style>
+        .reportview-container {
+            background-color: #ffffff;
+        }
+        .main {
+            color: #1a1a1a;
+            font-family: 'Arial', sans-serif;
+        }
+        .headline {
+            font-size: 26px;
+            color: #0073e6;
+            font-weight: bold;
+        }
+        .title {
+            font-size: 22px;
+            color: #333333;
+            font-weight: 600;
+        }
+        .body-text {
+            font-size: 20px;
+            color: #333333;
+        }
+        input {
+            font-size: 18px !important;
+            padding: 10px !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+else:
+    st.markdown(
+        """
+        <style>
+        .reportview-container {
+            background-color: #2e2e2e;
+        }
+        .main {
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+        }
+        .headline {
+            font-size: 26px;
+            color: #ffcc00;
+            font-weight: bold;
+        }
+        .title {
+            font-size: 22px;
+            color: #e0e0e0;
+            font-weight: 600;
+        }
+        .body-text {
+            font-size: 20px;
+            color: #e0e0e0;
+        }
+        input {
+            font-size: 18px !important;
+            padding: 10px !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
 # Define questions in sections
 questions = {
@@ -90,10 +141,10 @@ if current_section in ["Work and Volunteer Experience", "Skills and Abilities"]:
 elif current_section == "Education and Academic Achievements":
     st.sidebar.write("Include grades, awards, and any extracurricular activities that relate to academic success.")
 
-# Display current question with larger font size
-st.title("Student CV Generator")
-st.subheader(current_section)
-st.markdown(f"<div style='font-size: 22px;'>{current_question}</div>", unsafe_allow_html=True)
+# Display current question with larger font size and appropriate CSS class
+st.markdown("<div class='headline'>Student CV Generator</div>", unsafe_allow_html=True)
+st.markdown(f"<div class='title'>{current_section}</div>", unsafe_allow_html=True)
+st.markdown(f"<div class='body-text'>{current_question}</div>", unsafe_allow_html=True)
 response = st.text_input("", key=f"{current_section}_{current_question}")
 
 # Store responses
