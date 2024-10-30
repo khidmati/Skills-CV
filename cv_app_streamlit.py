@@ -62,6 +62,8 @@ def main():
         st.session_state.questions = get_questions()
     if 'total_questions' not in st.session_state:
         st.session_state.total_questions = sum(len(section['questions']) for section in st.session_state.questions)
+    if 'answer' not in st.session_state:
+        st.session_state.answer = ""
 
     # Display progress bar
     progress = st.session_state.question_number / st.session_state.total_questions
@@ -79,7 +81,8 @@ def main():
 
         # Display the question
         st.subheader(current_question['question'])
-        answer = st.text_area("", key=f"q{st.session_state.question_number}")
+        # Use a unique key for the text_area
+        answer = st.text_area("", value=st.session_state.answer, key='answer')
 
         # Next button
         if st.button("Next"):
@@ -87,9 +90,9 @@ def main():
             save_answer(current_section['section'], current_question['key'], answer)
             # Move to the next question
             st.session_state.question_number += 1
-            # Clear the text area by rerunning the app without calling st.experimental_rerun()
-            st.experimental_set_query_params(run=str(st.session_state.question_number))
-            st._rerun()
+            # Reset the answer
+            st.session_state.answer = ""
+            # Streamlit will rerun the script automatically when session_state changes
 
     else:
         # All questions have been answered
