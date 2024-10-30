@@ -4,7 +4,7 @@ import json
 # Add a toggle for Day/Night Mode
 mode = st.sidebar.radio("Select Mode", ["Light Mode", "Dark Mode"])
 
-# Apply custom CSS for true light and dark modes, Google-style typography, and vibrant colours
+# Apply custom CSS for distinct Light and Dark modes with improved colours and font hierarchy
 if mode == "Light Mode":
     st.markdown(
         """
@@ -13,14 +13,14 @@ if mode == "Light Mode":
         
         .reportview-container {
             font-family: 'Roboto', sans-serif;
-            background-color: #ffffff; /* True white background */
+            background-color: #ffffff;  /* True white background */
             color: #1a1a1a;
         }
         .sidebar .sidebar-content {
-            background-color: #f0f0f0; /* Light grey for sidebar */
+            background-color: #f8f8f8; /* Very light grey for sidebar */
         }
         .headline {
-            font-size: 44px;
+            font-size: 48px;
             color: #4285f4;  /* Google blue */
             font-weight: 700;
             text-align: center;
@@ -28,7 +28,7 @@ if mode == "Light Mode":
             margin-bottom: 20px;
         }
         .title {
-            font-size: 30px;
+            font-size: 28px;
             color: #333333;
             font-weight: 500;
             text-align: left;
@@ -38,7 +38,7 @@ if mode == "Light Mode":
         }
         .body-text {
             font-size: 22px;
-            color: #666666;
+            color: #555555;
             font-weight: 400;
             text-align: left;
             margin-bottom: 10px;
@@ -48,19 +48,19 @@ if mode == "Light Mode":
             font-size: 20px !important;
             color: #333333;
             padding: 15px !important;
-            background-color: #f7f7f7;
+            background-color: #ffffff;
             border-radius: 8px;
-            border: 1px solid #ccc;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 1px solid #ddd;  /* Light grey border */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         .stTextInput > div > input::placeholder {
-            color: #999999;
+            color: #888888;
         }
         .stButton > button {
             font-size: 20px;
             padding: 10px 20px;
             border-radius: 24px;
-            background-color: #4285f4; /* Google blue */
+            background-color: #4285f4;  /* Google blue */
             color: #ffffff;
             border: none;
             transition: background-color 0.3s, box-shadow 0.3s;
@@ -100,15 +100,15 @@ else:
             color: #ffffff;
         }
         .headline {
-            font-size: 44px;
-            color: #ffcc00;
+            font-size: 48px;
+            color: #ffcc00;  /* Google yellow for dark mode */
             font-weight: 700;
             text-align: center;
             margin-top: 20px;
             margin-bottom: 20px;
         }
         .title {
-            font-size: 30px;
+            font-size: 28px;
             color: #e0e0e0;
             font-weight: 500;
             text-align: left;
@@ -164,7 +164,7 @@ else:
 # Change header title to "FREE CV"
 st.markdown("<div class='headline'>FREE CV</div>", unsafe_allow_html=True)
 
-# Example progress tracking (simulating percentage completion)
+# Example progress tracking
 if "progress" not in st.session_state:
     st.session_state.progress = 0
 progress_percentage = st.session_state.progress
